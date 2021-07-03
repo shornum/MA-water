@@ -17,11 +17,13 @@ dat %>%
   select(-Record_number, -Author, -Manipulation, -Manipulation_level, -N,
          -SM_mean, -SM_sd)->
   dat_control
+
 dat_control %>% 
   select(-starts_with("SD_"), -Percent_control) %>% 
   pivot_longer(cols = c(Rs_annual, Rh_annual, Rs_growingseason), 
                names_to = "depvar", values_to = "control") ->
   cont1
+
 dat_control %>% 
   select(-Rs_annual, -Rh_annual, -Rs_growingseason, -Percent_control) %>% 
   pivot_longer(cols = c(SD_Rs_annual, SD_Rh_annual, SD_Rs_growingseason),
@@ -38,6 +40,7 @@ dat %>%
   pivot_longer(cols = c(Rs_annual, Rh_annual, Rs_growingseason), 
                names_to = "depvar", values_to = "manip") ->
   manip1
+
 dat %>% 
   filter(Manipulation != "None") %>% 
   select(-Rs_annual, -Rh_annual, -Rs_growingseason) %>% 
@@ -93,43 +96,60 @@ rsg_ma_remove <- rma(yi, vi, data = rsg_es_removal)
 # Plots of Effect Sizes
 # Water addition
 ggplot(rsg_es_addition, aes(yi, Author, color = Percent_control)) +
-  geom_point() + theme_minimal() + scale_color_gradient(low="purple", high="yellow") +
-  geom_vline(xintercept = 0.0, color = "black") + xlab("Effect Size") + 
+  geom_point() + 
+  theme_minimal() + 
+  scale_color_gradient(low = "purple", high = "yellow") +
+  geom_vline(xintercept = 0.0, color = "black") + 
+  xlab("Effect Size") + 
   ggtitle("Water Addition") + 
   geom_vline(xintercept = rsg_ma_add$beta, linetype = 2, color = "tomato3")+ 
-  geom_rect(xmin = rsg_ma_add$ci.lb, xmax = rsg_ma_add$ci.ub, 
-            ymin = -Inf, ymax = Inf, alpha = 0.002, color = "tomato3")
+  geom_rect(xmin = rsg_ma_add$ci.lb,
+            xmax = rsg_ma_add$ci.ub, 
+            ymin = -Inf, 
+            ymax = Inf, 
+            alpha = 0.002, color = "tomato3")
 
 # Water addition 2
-ggplot(rsg_es_addition, aes(yi, Author)) + geom_boxplot(fill = "purple") + 
-  geom_jitter(alpha = 0.2) + geom_vline(xintercept = 0.0, color = "black") +
-  theme_minimal() + xlab("Effect Size") + ggtitle("Water Addition") +
+ggplot(rsg_es_addition, aes(yi, Author)) + 
+  geom_boxplot(fill = "purple") + 
+  geom_jitter(alpha = 0.2) + 
+  geom_vline(xintercept = 0.0, color = "black") +
+  theme_minimal() + xlab("Effect Size") + 
+  ggtitle("Water Addition") +
   geom_vline(xintercept = rsg_ma_add$beta, linetype = 2, color = "red") +
-  geom_rect(xmin = rsg_ma_add$ci.lb, xmax = rsg_ma_add$ci.ub,
-            ymin = -Inf, ymax = Inf, alpha = 0.002, color = "red")
+  geom_rect(xmin = rsg_ma_add$ci.lb, 
+            xmax = rsg_ma_add$ci.ub,
+            ymin = -Inf,
+            ymax = Inf, 
+            alpha = 0.002, color = "red")
 
 # Water removal
 ggplot(rsg_es_removal, aes(yi, Author, color = Percent_control)) +
-  geom_point() + theme_minimal() + scale_color_gradient(low="purple", high="yellow") + 
-  geom_vline(xintercept = 0.0, color = "black") + xlab("Effect Size") +
+  geom_point() + 
+  theme_minimal() + 
+  scale_color_gradient(low = "purple", high = "yellow") + 
+  geom_vline(xintercept = 0.0, color = "black") + 
+  xlab("Effect Size") +
   ggtitle("Water Removal") +
   geom_vline(xintercept = rsg_ma_remove$beta, linetype = 2, color = "tomato3")+
-  geom_rect(xmin = rsg_ma_remove$ci.lb, xmax = rsg_ma_remove$ci.ub,
-            ymin = -Inf, ymax = Inf, alpha = 0.002, color = "tomato3")
+  geom_rect(xmin = rsg_ma_remove$ci.lb, 
+            xmax = rsg_ma_remove$ci.ub,
+            ymin = -Inf, 
+            ymax = Inf, 
+            alpha = 0.002, color = "tomato3")
 
 # Water removal 2
 ggplot(rsg_es_removal, aes(yi, Author)) + geom_boxplot(fill = "purple") + 
   geom_jitter(alpha = 0.2) + geom_vline(xintercept = 0.0, color = "black") +
   theme_minimal() + xlab("Effect Size") + ggtitle("Water Removal") +
   geom_vline(xintercept = rsg_ma_remove$beta, linetype = 2, color = "red") +
-  geom_rect(xmin = rsg_ma_remove$ci.lb, xmax = rsg_ma_remove$ci.ub,
-            ymin = -Inf, ymax = Inf, alpha = 0.002, color = "red")
+  geom_rect(xmin = rsg_ma_remove$ci.lb, 
+            xmax = rsg_ma_remove$ci.ub,
+            ymin = -Inf,
+            ymax = Inf, 
+            alpha = 0.002, color = "red")
 
 # Map!
-library(readr)
-library(dplyr)
-library(tidyr)
-library(ggmap)
 
 # Select the columns we want to use
 dat_rs %>% 
