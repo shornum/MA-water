@@ -5,6 +5,8 @@ library(dplyr)
 library(tidyr)
 library(ggplot2)
 library(metafor)
+library(ggmap)
+library(readr)
 
 # Step 1 - read the data using R's read.csv() function
 dat <- read.csv("Data_MA.csv", skip = 2)
