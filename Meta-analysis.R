@@ -12,6 +12,8 @@ library(readr)
 dat <- read.csv("Data_MA.csv", skip = 2)
 
 # Step 2 - reshape the data into form needed by metafor
+# We need to do this because we want the treatment and control
+# values in the same row
 # Construct the control data frame
 dat %>% 
   filter(Manipulation == "None") %>% 
