@@ -4,3 +4,20 @@ author: "Shoshanah Hornum"
 date: "7/6/2021"
 output: html_document
 ---
+
+```{r chunk-opts, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+```{r setup}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(metafor)
+library(ggmap)
+library(readr)
+
+# Step 1 - read the data using R's read.csv() function
+dat <- read.csv("Data_MA.csv", skip = 2)
+```
+
