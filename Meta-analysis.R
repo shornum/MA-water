@@ -1,5 +1,5 @@
 # Script to run meta-analysis on Rs data
-# Shoshanah Hornum 2021
+# Shoshanah Hornum July 2021
 
 library(dplyr)
 library(tidyr)
