@@ -21,3 +21,71 @@ library(readr)
 dat <- read.csv("Data_MA.csv", skip = 2)
 ```
 
+```{r process}
+# Step 2 - reshape the data into form needed by metafor
+# We need to do this because we want the treatment and control
+# values in the same row
+# Construct the control data frame
+dat %>% 
+  filter(Manipulation == "None") %>% 
+  select(-Record_number, -Author, -Manipulation, -Manipulation_level, -N,
+         -SM_mean, -SM_sd)->
+  dat_control
+
+dat_control %>% 
+  select(-starts_with("SD_"), -Percent_control) %>% 
+  pivot_longer(cols = c(Rs_annual, Rh_annual, Rs_growingseason), 
+               names_to = "depvar", values_to = "control") ->
+  cont1
+
+dat_control %>% 
+  select(-Rs_annual, -Rh_annual, -Rs_growingseason, -Percent_control) %>% 
+  pivot_longer(cols = c(SD_Rs_annual, SD_Rh_annual, SD_Rs_growingseason),
+               names_to = "depvar", values_to = "SD_control") %>% 
+  mutate(depvar = gsub("SD_", "", depvar)) ->
+  cont2
+
+cont1 %>% left_join(cont2) -> dat_control
+
+# and manipulation data frame
+dat %>% 
+  filter(Manipulation != "None") %>% 
+  select(-starts_with("SD_")) %>% 
+  pivot_longer(cols = c(Rs_annual, Rh_annual, Rs_growingseason), 
+               names_to = "depvar", values_to = "manip") ->
+  manip1
+
+dat %>% 
+  filter(Manipulation != "None") %>% 
+  select(-Rs_annual, -Rh_annual, -Rs_growingseason) %>% 
+  pivot_longer(cols = c(SD_Rs_annual, SD_Rh_annual, SD_Rs_growingseason), 
+               names_to = "depvar", values_to = "SD_manip") %>% 
+  mutate(depvar = gsub("SD_", "", depvar)) ->
+  manip2
+
+manip1 %>% left_join(manip2) -> dat_manip
+
+# ...and join with the manipulation data
+dat_manip %>% 
+  left_join(dat_control, 
+            by = c("Study_number", "Study_midyear", "Ecosystem_type",
+                   "Latitude", "Longitude", "Meas_method", "Soil_type", "Soil_drainage",
+                   "Elevation", "depvar")) %>% 
+  filter(!is.na(manip)) ->
+  dat_rs
+
+# Step 2.5 - Use filter() and select() to isolate data we're interested in
+# Filter for water addition
+dat_rs %>%
+  filter(depvar == "Rs_growingseason", manip != "NA", control != "NA", 
+         Percent_control > 100) %>% 
+  select(N, manip, SD_manip, control, SD_control, Percent_control, 
+         Author) -> rs_growing_addition
+
+# Filter for water removal
+dat_rs %>% 
+  filter(depvar == "Rs_growingseason", manip != "NA", control != "NA", 
+         Percent_control < 100) %>% 
+  select(N, manip, SD_manip, control, SD_control, Percent_control, 
+         Author) -> rs_growing_removal
+```
