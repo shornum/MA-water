@@ -69,14 +69,14 @@ dat_rs %>%
   filter(depvar == "Rs_growingseason", manip != "NA", control != "NA", 
          Percent_control > 100) %>% 
   select(N, manip, SD_manip, control, SD_control, Percent_control, 
-         Author) -> rs_growing_addition
+         Author, Ecosystem_type) -> rs_growing_addition
 
 # Filter for water removal
 dat_rs %>% 
   filter(depvar == "Rs_growingseason", manip != "NA", control != "NA", 
          Percent_control < 100) %>% 
   select(N, manip, SD_manip, control, SD_control, Percent_control, 
-         Author) -> rs_growing_removal
+         Author, Ecosystem_type) -> rs_growing_removal
 
 # Compute Effect Sizes
 # Effect size for water addition
@@ -91,10 +91,10 @@ rsg_es_removal <- escalc(measure = "ROM", m1i = manip, m2i = control,
 
 # Run the Meta-Analysis
 # Water addition
-rsg_ma_add <- rma(yi, vi, data = rsg_es_addition)
+rsg_ma_add <- rma(yi, vi, mods = cbind(Percent_control, factor(rs_growing_addition$Ecosystem_type)), data = rsg_es_addition)
 
 # Water removal
-rsg_ma_remove <- rma(yi, vi, data = rsg_es_removal)
+rsg_ma_remove <- rma(yi, vi, mods = cbind(Percent_control, factor(rs_growing_removal$Ecosystem_type)), data = rsg_es_removal)
 
 # Plots of Effect Sizes
 # Water addition
