@@ -104,56 +104,59 @@ rsg_ma_remove <- rma(yi, vi, mods = cbind(Percent_control,
 
 # Plots of Effect Sizes
 # Water addition
-ggplot(rsg_es_addition, aes(yi, Author, color = Percent_control)) +
+ggplot(rsg_es_addition, aes(yi, Author, color = Percent_control, 
+       xmax = rsg_ma_add$ci.ub[1])) +
   geom_point() + 
   theme_minimal() + 
   scale_color_gradient(low = "purple", high = "yellow") +
   geom_vline(xintercept = 0.0, color = "black") + 
   xlab("Effect Size") + 
   ggtitle("Water Addition") + 
-  geom_vline(xintercept = rsg_ma_add$beta, linetype = 2, color = "tomato3")+ 
-  geom_rect(xmin = rsg_ma_add$ci.lb,
-            xmax = rsg_ma_add$ci.ub, 
+  geom_vline(xintercept = rsg_ma_add$beta[1], linetype = 2, color = "tomato3")+ 
+  geom_rect(xmin = rsg_ma_add$ci.lb[1],
+            xmax = rsg_ma_add$ci.ub[1], 
             ymin = -Inf, 
             ymax = Inf, 
             alpha = 0.002, color = "tomato3")
 
 # Water addition 2
-ggplot(rsg_es_addition, aes(yi, Author)) + 
+ggplot(rsg_es_addition, aes(yi, Author, xmax = rsg_ma_add$ci.ub[1])) + 
   geom_boxplot(fill = "purple") + 
   geom_jitter(alpha = 0.2) + 
   geom_vline(xintercept = 0.0, color = "black") +
   theme_minimal() + xlab("Effect Size") + 
   ggtitle("Water Addition") +
-  geom_vline(xintercept = rsg_ma_add$beta, linetype = 2, color = "red") +
-  geom_rect(xmin = rsg_ma_add$ci.lb, 
-            xmax = rsg_ma_add$ci.ub,
+  geom_vline(xintercept = rsg_ma_add$beta[1], linetype = 2, color = "red") +
+  geom_rect(xmin = rsg_ma_add$ci.lb[1], 
+            xmax = rsg_ma_add$ci.ub[1],
             ymin = -Inf,
             ymax = Inf, 
             alpha = 0.002, color = "red")
 
 # Water removal
-ggplot(rsg_es_removal, aes(yi, Author, color = Percent_control)) +
+ggplot(rsg_es_removal, aes(yi, Author, color = Percent_control, 
+       xmin = rsg_ma_remove$ci.lb[1])) +
   geom_point() + 
   theme_minimal() + 
   scale_color_gradient(low = "purple", high = "yellow") + 
   geom_vline(xintercept = 0.0, color = "black") + 
   xlab("Effect Size") +
   ggtitle("Water Removal") +
-  geom_vline(xintercept = rsg_ma_remove$beta, linetype = 2, color = "tomato3")+
-  geom_rect(xmin = rsg_ma_remove$ci.lb, 
-            xmax = rsg_ma_remove$ci.ub,
+  geom_vline(xintercept = rsg_ma_remove$beta[1], linetype = 2, color = "tomato3")+
+  geom_rect(xmin = rsg_ma_remove$ci.lb[1], 
+            xmax = rsg_ma_remove$ci.ub[1],
             ymin = -Inf, 
             ymax = Inf, 
             alpha = 0.002, color = "tomato3")
 
 # Water removal 2
-ggplot(rsg_es_removal, aes(yi, Author)) + geom_boxplot(fill = "purple") + 
-  geom_jitter(alpha = 0.2) + geom_vline(xintercept = 0.0, color = "black") +
+ggplot(rsg_es_removal, aes(yi, Author, xmin = rsg_ma_remove$ci.lb[1])) + 
+  geom_boxplot(fill = "purple") + geom_jitter(alpha = 0.2) + 
+  geom_vline(xintercept = 0.0, color = "black") +
   theme_minimal() + xlab("Effect Size") + ggtitle("Water Removal") +
-  geom_vline(xintercept = rsg_ma_remove$beta, linetype = 2, color = "red") +
-  geom_rect(xmin = rsg_ma_remove$ci.lb, 
-            xmax = rsg_ma_remove$ci.ub,
+  geom_vline(xintercept = rsg_ma_remove$beta[1], linetype = 2, color = "red") +
+  geom_rect(xmin = rsg_ma_remove$ci.lb[1], 
+            xmax = rsg_ma_remove$ci.ub[1],
             ymin = -Inf,
             ymax = Inf, 
             alpha = 0.002, color = "red")
@@ -187,3 +190,4 @@ dat_rs %>%
   theme_minimal() + 
   facet_wrap(~depvar, scales = "free") + 
   scale_color_gradient(low = "purple", high = "yellow")
+
